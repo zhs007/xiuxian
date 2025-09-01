@@ -84,7 +84,9 @@ describe('Game', () => {
 
   it('should throw an error if trying to resolve a choice when no event is active', () => {
     game.startNewGame(mockCharacterCard, 'Player', initialEventDeck);
-    expect(() => game.resolveChoice(0)).toThrow('Cannot resolve choice: no current event is active.');
+    expect(() => game.resolveChoice(0)).toThrow(
+      'Cannot resolve choice: no current event is active.',
+    );
   });
 
   it('should throw an error if an invalid choice index is provided', () => {

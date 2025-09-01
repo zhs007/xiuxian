@@ -9,12 +9,12 @@ import { Card, CardType } from './Card';
  * An enumeration of all possible Item card subtypes.
  */
 export enum ItemCardType {
-  Effect = 'Effect',     // Automatically triggers on acquisition
-  Function = 'Function',   // Active use consumable (potions, talismans)
+  Effect = 'Effect', // Automatically triggers on acquisition
+  Function = 'Function', // Active use consumable (potions, talismans)
   Equipment = 'Equipment', // Passive-effect gear (swords, armor)
-  Artifact = 'Artifact',   // Crafting stations (furnaces, cauldrons)
-  Gongfa = 'Gongfa',     // Cultivation techniques to be learned
-  Skill = 'Skill',       // Abilities learned from Gongfa
+  Artifact = 'Artifact', // Crafting stations (furnaces, cauldrons)
+  Gongfa = 'Gongfa', // Cultivation techniques to be learned
+  Skill = 'Skill', // Abilities learned from Gongfa
   Formation = 'Formation', // Special arrays that can be activated
 }
 

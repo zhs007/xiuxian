@@ -99,13 +99,24 @@ export class Renderer {
       this.app.stage.on('pointermove', onDragMove);
     });
 
-  const choiceTextStyle = { fontFamily: 'Arial', fontSize: 24, fill: '#ffffff', align: 'center' } as const;
-    const choiceTextLeft = new Text({ text: cardData.options[0].description, style: choiceTextStyle });
-    const choiceTextRight = new Text({ text: cardData.options[1].description, style: choiceTextStyle });
+    const choiceTextStyle = {
+      fontFamily: 'Arial',
+      fontSize: 24,
+      fill: '#ffffff',
+      align: 'center',
+    } as const;
+    const choiceTextLeft = new Text({
+      text: cardData.options[0].description,
+      style: choiceTextStyle,
+    });
+    const choiceTextRight = new Text({
+      text: cardData.options[1].description,
+      style: choiceTextStyle,
+    });
     choiceTextLeft.anchor.set(0.5);
     choiceTextRight.anchor.set(0.5);
     choiceTextLeft.x = this.app.screen.width / 4;
-    choiceTextRight.x = this.app.screen.width * 3 / 4;
+    choiceTextRight.x = (this.app.screen.width * 3) / 4;
     choiceTextLeft.y = choiceTextRight.y = this.app.screen.height / 2;
     choiceTextLeft.visible = choiceTextRight.visible = false;
     this.uiLayer.addChild(choiceTextLeft, choiceTextRight);

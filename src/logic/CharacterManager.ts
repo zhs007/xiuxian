@@ -118,7 +118,7 @@ export class CharacterManager {
 
   public toJSON() {
     // Convert maps to arrays for serialization
-  const characters = Array.from(this.characters.entries()).map(([id, char]) => {
+    const characters = Array.from(this.characters.entries()).map(([id, char]) => {
       return {
         ...char,
         attributes: Array.from(char.attributes.entries()),

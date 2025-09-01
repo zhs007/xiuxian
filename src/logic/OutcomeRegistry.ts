@@ -7,18 +7,19 @@ import type { Outcome } from '@/types/Outcome';
 import type { AnyItemCard } from '@/types/ItemCard';
 
 const outcomes: Record<string, Outcome> = {
-  'forest_1': {
+  forest_1: {
     id: 'forest_1',
     requirements: [], // No requirements, always succeeds
     success: {
       narration: 'You venture into the dark forest. A sense of unease washes over you.',
       attributes: [{ key: 'sanity', value: -5 }],
     },
-    failure: { // Unused since there are no requirements
+    failure: {
+      // Unused since there are no requirements
       narration: '',
     },
   },
-  'town_1': {
+  town_1: {
     id: 'town_1',
     requirements: [],
     success: {
@@ -29,24 +30,30 @@ const outcomes: Record<string, Outcome> = {
       narration: '',
     },
   },
-  'grab_glimmer': {
+  grab_glimmer: {
     id: 'grab_glimmer',
     requirements: [{ attribute: 'strength', value: 10 }],
     success: {
-      narration: 'With a strong pull, you retrieve a rusty, but solid, iron sword from the riverbed!',
+      narration:
+        'With a strong pull, you retrieve a rusty, but solid, iron sword from the riverbed!',
       itemsGained: ['item_sword_rusty'],
     },
     failure: {
-      narration: 'You reach for the glimmer, but the current is too strong. You lose your footing and swallow some water.',
+      narration:
+        'You reach for the glimmer, but the current is too strong. You lose your footing and swallow some water.',
       attributes: [{ key: 'hp', value: -5 }],
     },
   },
-  'rest': {
+  rest: {
     id: 'rest',
     requirements: [],
     success: {
-      narration: 'You decide to ignore the glimmer and take a short rest, restoring some of your energy.',
-      attributes: [{ key: 'hp', value: 10 }, { key: 'stamina', value: 5 }],
+      narration:
+        'You decide to ignore the glimmer and take a short rest, restoring some of your energy.',
+      attributes: [
+        { key: 'hp', value: 10 },
+        { key: 'stamina', value: 5 },
+      ],
     },
     failure: {
       narration: '',
@@ -57,7 +64,7 @@ const outcomes: Record<string, Outcome> = {
 // We also need a registry for the items themselves
 // In a real game, this would be a large database.
 const itemRegistry: Record<string, AnyItemCard> = {
-  'item_sword_rusty': ({
+  item_sword_rusty: {
     id: 'item_sword_rusty',
     name: 'Rusty Sword',
     type: 'Item',
@@ -68,7 +75,7 @@ const itemRegistry: Record<string, AnyItemCard> = {
     maxDurability: 10,
     requirements: [],
     perTurnCosts: [],
-  } as unknown) as AnyItemCard
+  } as unknown as AnyItemCard,
 };
 
 export const OutcomeRegistry = {

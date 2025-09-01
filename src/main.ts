@@ -18,7 +18,8 @@ const mockEventDeck: EventCard[] = [
     id: 'ev_001',
     name: 'A Fork in the Road',
     type: CardType.Event,
-    description: 'You encounter a weathered signpost. The left path leads into a dark forest, the right towards a bustling town.',
+    description:
+      'You encounter a weathered signpost. The left path leads into a dark forest, the right towards a bustling town.',
     illustration: 'path/to/fork_art.png',
     options: [
       { description: 'Venture into the forest.', outcomeId: 'forest_1' },

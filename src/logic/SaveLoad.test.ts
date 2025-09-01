@@ -4,12 +4,37 @@ import type { CharacterCard, EventCard } from '@/types/Card';
 import { CardType } from '@/types/Card';
 
 const mockCharacterCard: CharacterCard = {
-  id: 'charCard1', name: 'Test Character', type: CardType.Character, gender: 'male', description: '', illustration: '',
+  id: 'charCard1',
+  name: 'Test Character',
+  type: CardType.Character,
+  gender: 'male',
+  description: '',
+  illustration: '',
 };
 
 const mockEventDeck: EventCard[] = [
-  { id: 'e1', name: 'Event 1', type: CardType.Event, description: '', illustration: '', options: [{d: 'A', o: 'A'},{d: 'B', o: 'B'}] as any },
-  { id: 'e2', name: 'Event 2', type: CardType.Event, description: '', illustration: '', options: [{d: 'A', o: 'A'},{d: 'B', o: 'B'}] as any },
+  {
+    id: 'e1',
+    name: 'Event 1',
+    type: CardType.Event,
+    description: '',
+    illustration: '',
+    options: [
+      { d: 'A', o: 'A' },
+      { d: 'B', o: 'B' },
+    ] as any,
+  },
+  {
+    id: 'e2',
+    name: 'Event 2',
+    type: CardType.Event,
+    description: '',
+    illustration: '',
+    options: [
+      { d: 'A', o: 'A' },
+      { d: 'B', o: 'B' },
+    ] as any,
+  },
 ];
 
 describe('Save and Load Functionality', () => {

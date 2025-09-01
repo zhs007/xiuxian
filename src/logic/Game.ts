@@ -34,7 +34,7 @@ export class Game {
   public startNewGame(
     playerCard: CharacterCard,
     playerName: string,
-    initialDeck: EventCard[]
+    initialDeck: EventCard[],
   ): void {
     const player = this.characterManager.createCharacter(playerCard, playerName);
     this.playerCharacterId = player.id;
@@ -96,7 +96,11 @@ export class Game {
     if (result.attributes) {
       for (const attrChange of result.attributes) {
         const currentVal = this.characterManager.getAttribute(player.id, attrChange.key);
-        this.characterManager.setAttribute(player.id, attrChange.key, currentVal + attrChange.value);
+        this.characterManager.setAttribute(
+          player.id,
+          attrChange.key,
+          currentVal + attrChange.value,
+        );
       }
     }
     if (result.itemsGained) {
@@ -126,7 +130,7 @@ export class Game {
 
   public getDeckManager(): DeckManager {
     if (!this.deckManager) {
-      throw new Error("Deck manager is not initialized. Have you started a new game?");
+      throw new Error('Deck manager is not initialized. Have you started a new game?');
     }
     return this.deckManager;
   }
@@ -157,7 +161,10 @@ export class Game {
       this.deckManager = DeckManager.fromJSON(state.deckManagerState);
     }
     if (state.characterManagerState) {
-      this.characterManager = CharacterManager.fromJSON(state.characterManagerState, this.eventListenerSystem);
+      this.characterManager = CharacterManager.fromJSON(
+        state.characterManagerState,
+        this.eventListenerSystem,
+      );
     }
   }
 }

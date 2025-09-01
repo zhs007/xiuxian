@@ -43,7 +43,7 @@ describe('DeckManager', () => {
 
     // A simple shuffle check: compare the order before and after.
     // This is not a perfect test for randomness, but it's a good sanity check.
-    const originalOrder = cards.map(c => c.id).join('');
+    const originalOrder = cards.map((c) => c.id).join('');
     deckManager.shuffle();
     const shuffledOrder = Array.from({ length: 10 }, () => deckManager.draw()?.id).join('');
 
@@ -90,16 +90,16 @@ describe('DeckManager', () => {
     });
 
     it('should correctly report the active deck size with multiple levels', () => {
-        const deckManager = new DeckManager([createMockCard('c1'), createMockCard('c2')]);
-        expect(deckManager.getDeckSize()).toBe(2);
-        deckManager.pushNewDeck([createMockCard('d1')]);
-        expect(deckManager.getDeckSize()).toBe(1);
-        deckManager.pushNewDeck([createMockCard('d2'), createMockCard('d3')]);
-        expect(deckManager.getDeckSize()).toBe(2);
-        deckManager.popDeck();
-        expect(deckManager.getDeckSize()).toBe(1);
-        deckManager.popDeck();
-        expect(deckManager.getDeckSize()).toBe(2);
+      const deckManager = new DeckManager([createMockCard('c1'), createMockCard('c2')]);
+      expect(deckManager.getDeckSize()).toBe(2);
+      deckManager.pushNewDeck([createMockCard('d1')]);
+      expect(deckManager.getDeckSize()).toBe(1);
+      deckManager.pushNewDeck([createMockCard('d2'), createMockCard('d3')]);
+      expect(deckManager.getDeckSize()).toBe(2);
+      deckManager.popDeck();
+      expect(deckManager.getDeckSize()).toBe(1);
+      deckManager.popDeck();
+      expect(deckManager.getDeckSize()).toBe(2);
     });
   });
 });

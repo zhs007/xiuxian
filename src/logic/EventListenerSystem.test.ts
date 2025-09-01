@@ -31,7 +31,10 @@ describe('EventListenerSystem', () => {
     const listener = vi.fn();
 
     system.on(GameEventType.AttributeDidChange, listener);
-    system.dispatch({ type: GameEventType.ItemWasGained, payload: { characterId: 'char1', item: {} as any } });
+    system.dispatch({
+      type: GameEventType.ItemWasGained,
+      payload: { characterId: 'char1', item: {} as any },
+    });
 
     expect(listener).not.toHaveBeenCalled();
   });

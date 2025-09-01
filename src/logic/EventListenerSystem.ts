@@ -49,7 +49,7 @@ export class EventListenerSystem {
     const listenerSet = this.listeners.get(event.type);
     if (listenerSet) {
       // Iterate over a copy of the set in case a listener modifies the original set
-      [...listenerSet].forEach(listener => listener(event));
+      [...listenerSet].forEach((listener) => listener(event));
     }
   }
 }
