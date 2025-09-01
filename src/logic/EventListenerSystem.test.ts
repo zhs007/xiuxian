@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { EventListenerSystem } from './EventListenerSystem';
 import { GameEventType } from '@/types/Event';
-import type { GameEvent, AttributeChangePayload } from '@/types/Event';
+import type { AttributeChangePayload } from '@/types/Event';
 
 describe('EventListenerSystem', () => {
   it('should create an instance without errors', () => {

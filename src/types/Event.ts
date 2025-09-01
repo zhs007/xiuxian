@@ -3,7 +3,6 @@
  */
 
 import { AttributeKey } from './Attribute';
-import { CardId } from './Card';
 import { CharacterId } from './Character';
 import { AnyItemCard } from './ItemCard';
 

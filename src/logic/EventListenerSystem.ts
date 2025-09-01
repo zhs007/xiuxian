@@ -1,7 +1,7 @@
 /**
  * @file Implements the central event bus for the game.
  */
-import type { GameEvent, GameEventPayloads, GameEventType } from '@/types/Event';
+import type { GameEvent, GameEventType } from '@/types/Event';
 
 /**
  * A function that handles a dispatched game event.

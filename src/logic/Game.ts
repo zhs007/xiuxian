@@ -78,7 +78,6 @@ export class Game {
       return;
     }
 
-    let result: OutcomeResult;
     let meetsRequirements = true;
 
     // Check requirements
@@ -91,7 +90,7 @@ export class Game {
       }
     }
 
-    result = meetsRequirements ? outcome.success : outcome.failure;
+    const result: OutcomeResult = meetsRequirements ? outcome.success : outcome.failure;
 
     // Apply the results
     if (result.attributes) {

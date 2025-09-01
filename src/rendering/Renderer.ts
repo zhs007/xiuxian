@@ -2,7 +2,7 @@
  * @file Main class for handling all Pixi.js rendering.
  */
 import { Application, Container, Text } from 'pixi.js';
-import type { Card } from '@/types/Card';
+import type { EventCard } from '@/types/Card';
 import type { Game } from '@/logic/Game';
 import { CardComponent } from './CardComponent';
 
@@ -80,7 +80,7 @@ export class Renderer {
     }
   }
 
-  private drawEventCard(cardData: Card): void {
+  private drawEventCard(cardData: EventCard): void {
     const card = new CardComponent(cardData);
     card.x = (this.app.screen.width - card.width) / 2;
     card.y = (this.app.screen.height - card.height) / 2;
@@ -99,7 +99,7 @@ export class Renderer {
       this.app.stage.on('pointermove', onDragMove);
     });
 
-    const choiceTextStyle = { fontFamily: 'Arial', fontSize: 24, fill: '#ffffff', align: 'center' } as const;
+  const choiceTextStyle = { fontFamily: 'Arial', fontSize: 24, fill: '#ffffff', align: 'center' } as const;
     const choiceTextLeft = new Text({ text: cardData.options[0].description, style: choiceTextStyle });
     const choiceTextRight = new Text({ text: cardData.options[1].description, style: choiceTextStyle });
     choiceTextLeft.anchor.set(0.5);

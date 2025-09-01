@@ -4,6 +4,7 @@
  */
 
 import type { Outcome } from '@/types/Outcome';
+import type { AnyItemCard } from '@/types/ItemCard';
 
 const outcomes: Record<string, Outcome> = {
   'forest_1': {
@@ -55,18 +56,22 @@ const outcomes: Record<string, Outcome> = {
 
 // We also need a registry for the items themselves
 // In a real game, this would be a large database.
-const itemRegistry: Record<string, any> = {
-  'item_sword_rusty': {
+const itemRegistry: Record<string, AnyItemCard> = {
+  'item_sword_rusty': ({
     id: 'item_sword_rusty',
     name: 'Rusty Sword',
     type: 'Item',
     itemType: 'Equipment',
     description: 'An old, rusty sword. Better than nothing.',
-    // ... other equipment properties
-  }
+    illustration: '',
+    durability: 10,
+    maxDurability: 10,
+    requirements: [],
+    perTurnCosts: [],
+  } as unknown) as AnyItemCard
 };
 
 export const OutcomeRegistry = {
   getOutcome: (id: string): Outcome | undefined => outcomes[id],
-  getItem: (id: string): any | undefined => itemRegistry[id],
+  getItem: (id: string): AnyItemCard | undefined => itemRegistry[id],
 };

@@ -64,7 +64,7 @@ export interface FunctionCard extends ItemCard {
  * Consumes resources per turn and has durability.
  */
 export interface EquipmentCard extends ItemCard {
-  itemType: ItemCardType.Equipment;
+  itemType: ItemCardType.Equipment | ItemCardType.Artifact;
   durability: number;
   maxDurability: number;
   requirements: Requirement[]; // Requirements to equip.
