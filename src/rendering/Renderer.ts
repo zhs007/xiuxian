@@ -2,7 +2,9 @@
  * @file Main class for handling all Pixi.js rendering.
  */
 import { Application, Container, Text } from 'pixi.js';
+import type { Card } from '@/types/Card';
 import type { Game } from '@/logic/Game';
+import { CardComponent } from './CardComponent';
 
 export class Renderer {
   public app: Application;
