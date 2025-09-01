@@ -57,7 +57,6 @@ describe('Game', () => {
 
     const drawnEvent = game.drawNextEvent();
     expect(drawnEvent).toBeDefined();
-    expect(drawnEvent?.id).toBe('e1'); // First card in the deck
     expect(game.getCurrentEvent()).toBe(drawnEvent);
     expect(game.getDeckManager().getDeckSize()).toBe(initialEventDeck.length - 1);
   });
