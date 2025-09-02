@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { toDesignPoint, annotateEventWithDesign } from './utils/input';
 import { MainScene } from './scenes/MainScene';
 import { StartScene } from './scenes/StartScene';
 
@@ -24,11 +23,7 @@ async function main() {
 
   // Add the canvas to the DOM.
   document.body.appendChild(app.canvas);
-  (window as any).toDesignPoint = (event: PointerEvent | Touch | { clientX: number; clientY: number } | any) =>
-    toDesignPoint(event, designWidth, designHeight);
-
-  // Install global annotation of native events with design-space coords
-  annotateEventWithDesign(app, designWidth, designHeight);
+  // No global helpers required; PIXI federated events provide `global` coordinates.
 
   // Create the start scene.
   let currentScene: PIXI.Container & { update: (delta: number) => void };

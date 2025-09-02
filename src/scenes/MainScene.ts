@@ -13,9 +13,9 @@ export class MainScene extends PIXI.Container {
   private dragging = false;
   private dragStart = new PIXI.Point();
   private originalPosition = new PIXI.Point();
-  private debugText: PIXI.Text | null = null;
+  
 
-  // Use global helper (window.toDesignPoint) provided by main.ts
+  // Pointer handling uses the PIXI federated event global coords.
   // animation state for smooth return / bounce
   
 
@@ -40,15 +40,7 @@ export class MainScene extends PIXI.Container {
 
     this.addChild(this.card);
 
-    // Debug overlay: shows tilt/position/pending swipe and last action
-    this.debugText = new PIXI.Text('', {
-      fill: '#00ff00',
-      fontSize: 18,
-      fontFamily: 'Arial'
-    });
-    this.debugText.x = 12;
-    this.debugText.y = 12;
-    this.addChild(this.debugText);
+  // debug overlay removed
 
     this.card.eventMode = 'static';
     this.card.cursor = 'pointer';
@@ -66,28 +58,9 @@ export class MainScene extends PIXI.Container {
   // kill any gsap tweens on the card so manual drag is immediate
   gsap.killTweensOf(this.card);
   this.dragging = true;
-    // Store the initial position of the pointer relative to this container.
-  const origEv = (event as any).originalEvent as any;
-  let designPoint: PIXI.Point;
-  let src = 'computed';
-  if (origEv && (origEv as any).__designPoint) {
-    designPoint = (origEv as any).__designPoint;
-    src = 'orig.__designPoint';
-  } else if ((event as any).__designPoint) {
-    designPoint = (event as any).__designPoint;
-    src = 'event.__designPoint';
-  } else {
-    designPoint = (window as any).toDesignPoint(origEv || event);
-    src = 'computed';
-  }
-  // convert to local coordinates of this container
-  const localPoint = this.toLocal(designPoint);
+  // Store the initial position of the pointer relative to this container.
+  const localPoint = event.global; // PIXI federated event provides global coords
   this.dragStart.copyFrom(localPoint);
-  if (this.debugText) {
-    const txt = `start src:${src} x:${designPoint.x.toFixed(1)} y:${designPoint.y.toFixed(1)}`;
-    this.debugText.text = txt;
-    console.log(txt);
-  }
     // Store the initial position of the card itself.
     this.originalPosition.set(this.card.x, this.card.y);
   };
@@ -97,20 +70,7 @@ export class MainScene extends PIXI.Container {
 
   private onDragMove = (event: PIXI.FederatedPointerEvent): void => {
     if (this.dragging && this.card) {
-  const origEv = (event as any).originalEvent as any;
-  let designPoint: PIXI.Point;
-  let src = 'computed';
-  if (origEv && (origEv as any).__designPoint) {
-    designPoint = (origEv as any).__designPoint;
-    src = 'orig.__designPoint';
-  } else if ((event as any).__designPoint) {
-    designPoint = (event as any).__designPoint;
-    src = 'event.__designPoint';
-  } else {
-    designPoint = (window as any).toDesignPoint(origEv || event);
-    src = 'computed';
-  }
-  const currentPoint = this.toLocal(designPoint);
+  const currentPoint = event.global;
   // Non-linear lateral mapping for better feel (work in PIXI renderer/design coordinates):
   // - normalize drag delta to [-1,1] using maxOffset
   // - apply a power curve (power < 1 amplifies small inputs)
@@ -162,11 +122,7 @@ export class MainScene extends PIXI.Container {
       const maxY = designHeight;
       this.card.y = Math.max(minY, Math.min(intendedY, maxY));
 
-      if (this.debugText) {
-        const txt = `src:${src} t:${t.toFixed(2)} pending:${this.pendingSwipe ?? 'none'} ix:${intendedX.toFixed(0)} x:${this.card.x.toFixed(0)} y:${this.card.y.toFixed(0)}`;
-        this.debugText.text = txt;
-        console.log(txt);
-      }
+  // debug logging removed
     }
   };
 
@@ -210,10 +166,7 @@ export class MainScene extends PIXI.Container {
     const offY = this.card.y + (direction === 'left' ? 120 : -120);
     const rot = direction === 'left' ? -Math.PI / 2 : Math.PI / 2;
 
-  // Log at the moment the fly-out starts
-  const msg = `Action: Swiped ${direction === 'left' ? 'Left' : 'Right'}`;
-  console.log(msg);
-  if (this.debugText) this.debugText.text = msg;
+  // fly-out started
 
     gsap.to(this.card, {
       x: offX,
@@ -242,7 +195,7 @@ export class MainScene extends PIXI.Container {
       duration: 0.5,
       ease: 'back.out(1.7)'
     });
-    if (this.debugText) this.debugText.text = 'Action: Canceled';
+  // canceled
   }
 
   /**
