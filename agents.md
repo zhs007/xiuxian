@@ -37,6 +37,13 @@ This is a TypeScript-based web game project. To get started, run `npm install` t
 - Run `npm run build` to create a production-ready build in the `dist` folder.
   - Run `npm run start` to start the production server.
 
+## Asset Handling
+
+- Static assets (images, fonts) are located in the `assets` directory.
+- To use an asset in the code, import it directly. Vite will handle the URL resolution.
+  - Example: `import myImage from '../assets/images/my-image.png';`
+  - This `myImage` variable can then be used with a loader like `PIXI.Assets.load()`.
+
 ## Agent Instructions Verification
 
 After making changes, please verify them by running the following commands:

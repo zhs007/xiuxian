@@ -41,7 +41,7 @@ export class StartScene extends PIXI.Container {
     const newGameButton = this.createButton('New Game', designHeight / 2);
     newGameButton.on('pointerover', () => this.logic.setHoveredButton('new'));
     newGameButton.on('pointerout', () => this.logic.setHoveredButton(null));
-    newGameButton.on('pointertap', () => console.log('New Game clicked'));
+    newGameButton.on('pointertap', () => this.emit('startgame'));
     this.addChild(newGameButton);
 
     // Create "Continue Game" button
