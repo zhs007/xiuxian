@@ -31,9 +31,10 @@ export class MainScene extends PIXI.Container {
     const texture = await PIXI.Assets.load(cardImageUrl);
     this.card = new PIXI.Sprite(texture);
 
-    this.card.anchor.set(0.5);
+  // Pivot slightly above the bottom so tilt feels natural around a lower point
+  this.card.anchor.set(0.5, 0.9);
     this.card.x = designWidth / 2;
-    this.card.y = designHeight / 2;
+    this.card.y = designHeight / 2 + 500;
 
     this.originalPosition.set(this.card.x, this.card.y);
 
@@ -130,7 +131,7 @@ export class MainScene extends PIXI.Container {
 
   // Rotate the card based on intended horizontal displacement (not clamped)
   const offsetXIntended = intendedX - this.originalPosition.x;
-  const maxAngleDeg = 45; // max tilt in degrees (changed to 45°)
+  const maxAngleDeg = 20; // max tilt in degrees
   const maxAngle = (maxAngleDeg * Math.PI) / 180;
   const t = Math.max(-1, Math.min(1, offsetXIntended / maxOffset));
       this.card.rotation = t * maxAngle;
@@ -149,8 +150,20 @@ export class MainScene extends PIXI.Container {
         this.pendingSwipe = null;
       }
       // update debug overlay
+      // Add a subtle vertical follow to make the card feel like it's tethered while dragging
+      const dragDeltaY = currentPoint.y - this.dragStart.y;
+      const maxYOffset = Math.min(120, designHeight * 0.06); // cap sway to ~6% of screen
+      const nY = Math.max(-1, Math.min(1, dragDeltaY / (designHeight / 2)));
+      const powerY = 0.7; // gentle non-linearity
+      const amplifyY = 1.0; // keep modest
+      const nonlinearY = Math.sign(nY) * Math.pow(Math.abs(nY), powerY);
+      const intendedY = this.originalPosition.y + nonlinearY * maxYOffset * amplifyY;
+      const minY = 0;
+      const maxY = designHeight;
+      this.card.y = Math.max(minY, Math.min(intendedY, maxY));
+
       if (this.debugText) {
-        const txt = `src:${src} t:${t.toFixed(2)} pending:${this.pendingSwipe ?? 'none'} ix:${intendedX.toFixed(0)} x:${this.card.x.toFixed(0)}`;
+        const txt = `src:${src} t:${t.toFixed(2)} pending:${this.pendingSwipe ?? 'none'} ix:${intendedX.toFixed(0)} x:${this.card.x.toFixed(0)} y:${this.card.y.toFixed(0)}`;
         this.debugText.text = txt;
         console.log(txt);
       }
