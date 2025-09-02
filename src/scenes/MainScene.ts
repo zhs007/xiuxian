@@ -13,11 +13,9 @@ export class MainScene extends PIXI.Container {
   private dragging = false;
   private dragStart = new PIXI.Point();
   private originalPosition = new PIXI.Point();
-  
 
   // Pointer handling uses the PIXI federated event global coords.
   // animation state for smooth return / bounce
-  
 
   constructor() {
     super();
@@ -28,11 +26,12 @@ export class MainScene extends PIXI.Container {
    * Initializes the scene, loading assets and setting up the UI.
    */
   private async initialize(): Promise<void> {
-    const texture = await PIXI.Assets.load(cardImageUrl);
+    // Load the texture via PIXI Assets to ensure it is cached before use
+    const texture = await PIXI.Assets.load<PIXI.Texture>(cardImageUrl);
     this.card = new PIXI.Sprite(texture);
 
-  // Pivot slightly above the bottom so tilt feels natural around a lower point
-  this.card.anchor.set(0.5, 0.9);
+    // Pivot slightly above the bottom so tilt feels natural around a lower point
+    this.card.anchor.set(0.5, 0.9);
     this.card.x = designWidth / 2;
     this.card.y = designHeight / 2 + 500;
 
@@ -40,7 +39,7 @@ export class MainScene extends PIXI.Container {
 
     this.addChild(this.card);
 
-  // debug overlay removed
+    // debug overlay removed
 
     this.card.eventMode = 'static';
     this.card.cursor = 'pointer';
@@ -54,13 +53,13 @@ export class MainScene extends PIXI.Container {
 
   private onDragStart = (event: PIXI.FederatedPointerEvent): void => {
     if (!this.card) return;
-  // cancel any ongoing animation so drag feels responsive
-  // kill any gsap tweens on the card so manual drag is immediate
-  gsap.killTweensOf(this.card);
-  this.dragging = true;
-  // Store the initial position of the pointer relative to this container.
-  const localPoint = event.global; // PIXI federated event provides global coords
-  this.dragStart.copyFrom(localPoint);
+    // cancel any ongoing animation so drag feels responsive
+    // kill any gsap tweens on the card so manual drag is immediate
+    gsap.killTweensOf(this.card);
+    this.dragging = true;
+    // Store the initial position of the pointer relative to this container.
+    const localPoint = event.global; // PIXI federated event provides global coords
+    this.dragStart.copyFrom(localPoint);
     // Store the initial position of the card itself.
     this.originalPosition.set(this.card.x, this.card.y);
   };
@@ -70,30 +69,31 @@ export class MainScene extends PIXI.Container {
 
   private onDragMove = (event: PIXI.FederatedPointerEvent): void => {
     if (this.dragging && this.card) {
-  const currentPoint = event.global;
-  // Non-linear lateral mapping for better feel (work in PIXI renderer/design coordinates):
-  // - normalize drag delta to [-1,1] using maxOffset
-  // - apply a power curve (power < 1 amplifies small inputs)
-  // - multiply by maxOffset and an extra amplifyFactor to make displacement more obvious
-  const dragDeltaX = currentPoint.x - this.dragStart.x;
-  const maxOffset = designWidth / 2;
-  const n = Math.max(-1, Math.min(1, dragDeltaX / maxOffset));
-  const power = 0.7; // <1 to amplify
-  const amplifyFactor = 1.4; // overall strength
-  const nonlinear = Math.sign(n) * Math.pow(Math.abs(n), power);
-  // Intended (unclamped) center x based on drag mapping
-  const intendedX = this.originalPosition.x + nonlinear * maxOffset * amplifyFactor;
+      const currentPoint = event.global;
+      // Non-linear lateral mapping for better feel (work in PIXI renderer/design coordinates):
+      // - normalize drag delta to [-1,1] using maxOffset
+      // - apply a power curve (power < 1 amplifies small inputs)
+      // - multiply by maxOffset and an extra amplifyFactor to make displacement more obvious
+      const dragDeltaX = currentPoint.x - this.dragStart.x;
+      const maxOffset = designWidth / 2;
+      const n = Math.max(-1, Math.min(1, dragDeltaX / maxOffset));
+      const power = 0.7; // <1 to amplify
+      const amplifyFactor = 1.4; // overall strength
+      const nonlinear = Math.sign(n) * Math.pow(Math.abs(n), power);
+      // Intended (unclamped) center x based on drag mapping
+      const intendedX =
+        this.originalPosition.x + nonlinear * maxOffset * amplifyFactor;
 
       // Render clamp: allow the card center to go to the screen edges
       const minX = 0;
       const maxX = designWidth;
       this.card.x = Math.max(minX, Math.min(intendedX, maxX));
 
-  // Rotate the card based on intended horizontal displacement (not clamped)
-  const offsetXIntended = intendedX - this.originalPosition.x;
-  const maxAngleDeg = 20; // max tilt in degrees
-  const maxAngle = (maxAngleDeg * Math.PI) / 180;
-  const t = Math.max(-1, Math.min(1, offsetXIntended / maxOffset));
+      // Rotate the card based on intended horizontal displacement (not clamped)
+      const offsetXIntended = intendedX - this.originalPosition.x;
+      const maxAngleDeg = 20; // max tilt in degrees
+      const maxAngle = (maxAngleDeg * Math.PI) / 180;
+      const t = Math.max(-1, Math.min(1, offsetXIntended / maxOffset));
       this.card.rotation = t * maxAngle;
 
       // Determine pending swipe based on normalized t (rotation influence), not raw x.
@@ -117,12 +117,13 @@ export class MainScene extends PIXI.Container {
       const powerY = 0.7; // gentle non-linearity
       const amplifyY = 1.0; // keep modest
       const nonlinearY = Math.sign(nY) * Math.pow(Math.abs(nY), powerY);
-      const intendedY = this.originalPosition.y + nonlinearY * maxYOffset * amplifyY;
+      const intendedY =
+        this.originalPosition.y + nonlinearY * maxYOffset * amplifyY;
       const minY = 0;
       const maxY = designHeight;
       this.card.y = Math.max(minY, Math.min(intendedY, maxY));
 
-  // debug logging removed
+      // debug logging removed
     }
   };
 
@@ -133,8 +134,8 @@ export class MainScene extends PIXI.Container {
 
     this.dragging = false;
 
-  const dragThresholdLeft = designWidth * 0.25;
-  const dragThresholdRight = designWidth * 0.75;
+    const dragThresholdLeft = designWidth * 0.25;
+    const dragThresholdRight = designWidth * 0.75;
 
     // Prioritize pendingSwipe (based on tilt). Only trigger if pendingSwipe exists when released.
     if (this.pendingSwipe === 'left') {
@@ -166,7 +167,7 @@ export class MainScene extends PIXI.Container {
     const offY = this.card.y + (direction === 'left' ? 120 : -120);
     const rot = direction === 'left' ? -Math.PI / 2 : Math.PI / 2;
 
-  // fly-out started
+    // fly-out started
 
     gsap.to(this.card, {
       x: offX,
@@ -193,9 +194,9 @@ export class MainScene extends PIXI.Container {
       y: this.originalPosition.y,
       rotation: 0,
       duration: 0.5,
-      ease: 'back.out(1.7)'
+      ease: 'back.out(1.7)',
     });
-  // canceled
+    // canceled
   }
 
   /**
@@ -203,6 +204,6 @@ export class MainScene extends PIXI.Container {
    * @param _delta - The time in milliseconds since the last update.
    */
   public update(_delta: number): void {
-  // No per-frame animation handling needed; gsap handles tweens.
+    // No per-frame animation handling needed; gsap handles tweens.
   }
 }
