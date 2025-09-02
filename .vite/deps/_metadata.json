@@ -1,0 +1,52 @@
+{
+  "hash": "0c323632",
+  "configHash": "135df27c",
+  "lockfileHash": "5e1a6466",
+  "browserHash": "eea5722e",
+  "optimized": {
+    "pixi.js": {
+      "src": "../../node_modules/pixi.js/lib/index.mjs",
+      "file": "pixi__js.js",
+      "fileHash": "634ba0dd",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "browserAll-K5KZ5TYR": {
+      "file": "browserAll-K5KZ5TYR.js"
+    },
+    "chunk-JIWS6O2B": {
+      "file": "chunk-JIWS6O2B.js"
+    },
+    "webworkerAll-W3TYWS2O": {
+      "file": "webworkerAll-W3TYWS2O.js"
+    },
+    "chunk-AXJEBLKI": {
+      "file": "chunk-AXJEBLKI.js"
+    },
+    "chunk-XHFZTJBU": {
+      "file": "chunk-XHFZTJBU.js"
+    },
+    "WebGPURenderer-I35U4DXB": {
+      "file": "WebGPURenderer-I35U4DXB.js"
+    },
+    "chunk-4OGPZSGP": {
+      "file": "chunk-4OGPZSGP.js"
+    },
+    "chunk-JBRZQJOI": {
+      "file": "chunk-JBRZQJOI.js"
+    },
+    "WebGLRenderer-TGSRSKTY": {
+      "file": "WebGLRenderer-TGSRSKTY.js"
+    },
+    "chunk-YVXQ4RER": {
+      "file": "chunk-YVXQ4RER.js"
+    },
+    "chunk-JOBAKITO": {
+      "file": "chunk-JOBAKITO.js"
+    },
+    "chunk-XG62LP2N": {
+      "file": "chunk-XG62LP2N.js"
+    }
+  }
+}

@@ -1,0 +1,1 @@
+{"version":3,"file":"startScreen.js","sourceRoot":"","sources":["startScreen.ts"],"names":[],"mappings":"AAAA;;;;;GAKG;AACH,MAAM,OAAO,gBAAgB;IAC3B,uEAAuE;IAChE,aAAa,GAA8B,IAAI,CAAC;IAEvD;;;;OAIG;IACI,gBAAgB,CAAC,MAAiC;QACvD,IAAI,CAAC,aAAa,GAAG,MAAM,CAAC;QAC5B,8EAA8E;IAChF,CAAC;CACF"}
