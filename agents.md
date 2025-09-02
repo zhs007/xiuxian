@@ -29,12 +29,13 @@ This is a TypeScript-based web game project. To get started, run `npm install` t
 ## Running the Application
 
 - **Development:**
-  1.  Run `npm run serve` in one terminal to start the Fastify server.
+    1.  Run `npm run serve` in one terminal to start the Fastify server with hot-reloading.
   2.  Run `npm run dev` in another terminal to start the Vite dev server for the client.
-  3.  Open the client URL shown in the terminal (usually `http://localhost:8080`).
+    3.  Open the client URL shown in the terminal (usually `http://localhost:8080` or `http://localhost:5173`).
 
-- **Production Build:**
+-   **Production:**
   - Run `npm run build` to create a production-ready build in the `dist` folder.
+    -   Run `npm run start` to start the production server.
 
 ## Agent Instructions Verification
 
