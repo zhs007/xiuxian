@@ -42,9 +42,9 @@ The project follows a strict separation between game logic and rendering.
 ### 3.1. Tooling and Scripts
 
 - `npm run dev`: Starts the Vite development server for the client.
--   `npm run serve`: Starts the Fastify server in development mode with watch enabled, using `tsx`.
--   `npm run build`: Compiles both the client and server for production.
--   `npm run start`: Starts the production server after a build.
+- `npm run serve`: Starts the Fastify server in development mode with watch enabled, using `tsx`.
+- `npm run build`: Compiles both the client and server for production.
+- `npm run start`: Starts the production server after a build.
 - `npm run lint`: Lints the code using ESLint.
 - `npm run format`: Formats the code using Prettier.
 - `npm run test`: Runs unit tests using Vitest.
