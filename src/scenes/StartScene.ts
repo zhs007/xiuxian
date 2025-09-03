@@ -1,8 +1,7 @@
 import * as PIXI from 'pixi.js';
+import { gsap } from 'gsap';
 import { StartScreenLogic } from '../game/logic/startScreen';
-
-const designWidth = 1080;
-const designHeight = 1920;
+import { DESIGN_WIDTH, DESIGN_HEIGHT } from '../config';
 
 /**
  * The start scene of the game.
@@ -33,12 +32,12 @@ export class StartScene extends PIXI.Container {
       },
     });
     logo.anchor.set(0.5);
-    logo.x = designWidth / 2;
-    logo.y = designHeight / 4;
+    logo.x = DESIGN_WIDTH / 2;
+    logo.y = DESIGN_HEIGHT / 4;
     this.addChild(logo);
 
     // Create "New Game" button
-    const newGameButton = this.createButton('New Game', designHeight / 2);
+    const newGameButton = this.createButton('New Game', DESIGN_HEIGHT / 2);
     newGameButton.on('pointerover', () => this.logic.setHoveredButton('new'));
     newGameButton.on('pointerout', () => this.logic.setHoveredButton(null));
     newGameButton.on('pointertap', () => this.emit('startgame'));
@@ -47,7 +46,7 @@ export class StartScene extends PIXI.Container {
     // Create "Continue Game" button
     const continueButton = this.createButton(
       'Continue Game',
-      designHeight / 2 + 120
+      DESIGN_HEIGHT / 2 + 120
     );
     continueButton.on('pointerover', () =>
       this.logic.setHoveredButton('continue')
@@ -68,6 +67,9 @@ export class StartScene extends PIXI.Container {
     const buttonHeight = 100;
 
     const container = new PIXI.Container();
+    container.x = DESIGN_WIDTH / 2;
+    container.y = y;
+    container.pivot.set(buttonWidth / 2, buttonHeight / 2);
 
     const graphics = new PIXI.Graphics();
     graphics.beginFill(0x1099bb);
@@ -86,11 +88,28 @@ export class StartScene extends PIXI.Container {
 
     container.addChild(graphics);
     container.addChild(buttonText);
-    container.x = designWidth / 2 - buttonWidth / 2;
-    container.y = y;
 
-    container.eventMode = 'static'; // Make the button interactive
+    // Set the interactive area to the button's dimensions for accurate hit detection.
+    container.hitArea = new PIXI.Rectangle(0, 0, buttonWidth, buttonHeight);
+    container.eventMode = 'static';
     container.cursor = 'pointer';
+
+    // Add visual feedback for hover and press states.
+    container.on('pointerover', () => {
+      gsap.to(container.scale, { x: 1.05, y: 1.05, duration: 0.2 });
+    });
+    container.on('pointerout', () => {
+      gsap.to(container.scale, { x: 1, y: 1, duration: 0.2 });
+    });
+    container.on('pointerdown', () => {
+      gsap.to(container.scale, { x: 0.95, y: 0.95, duration: 0.1 });
+    });
+    container.on('pointerup', () => {
+      gsap.to(container.scale, { x: 1.05, y: 1.05, duration: 0.1 });
+    });
+    container.on('pointerupoutside', () => {
+      gsap.to(container.scale, { x: 1, y: 1, duration: 0.2 });
+    });
 
     return container;
   }

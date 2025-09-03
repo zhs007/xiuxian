@@ -44,11 +44,27 @@ This is a TypeScript-based web game project. To get started, run `npm install` t
   - Example: `import myImage from '../assets/images/my-image.png';`
   - This `myImage` variable can then be used with a loader like `PIXI.Assets.load()`.
 
+## Architectural Patterns
+
+### Scene Management
+
+The project uses a singleton `SceneManager` (`src/scenes/SceneManager.ts`) to control the game's scenes.
+
+- **Usage:** To switch scenes, get the instance and call `SceneManager.getInstance().switchScene(NewScene)`.
+- **Lifecycle:** The manager automatically handles destroying the previous scene (calling `.destroy({ children: true })`) to prevent memory leaks. Do not manually add or remove scenes from the stage.
+
+### Logic and View Separation
+
+A strict separation between logic and view is enforced, particularly for complex scenes.
+- **Example (`MainScene`):** The complex drag/swipe calculations are not performed in `MainScene.ts`. Instead, they are located in pure functions in `src/game/logic/mainScreen.ts`.
+- **Workflow:** The view (`MainScene`) captures user input, passes it to the pure logic functions, and then applies the returned values to the Pixi.js objects.
+- **Testing:** All new gameplay logic should be in a `logic` file and be covered by unit tests.
+
 ## Agent Instructions Verification
 
 After making changes, please verify them by running the following commands:
 
 1.  `npm run lint`
 2.  `npm run format:check`
-3.  `npm run test`
+3.  `npm run test:ci` (Note: use the `test:ci` script for non-interactive testing)
 4.  `npm run build`
