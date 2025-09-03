@@ -1,9 +1,11 @@
 import * as PIXI from 'pixi.js';
 import { gsap } from 'gsap';
 import cardImageUrl from '../../assets/cards/card.png?url';
-
-const designWidth = 1080;
-const designHeight = 1920;
+import { DESIGN_WIDTH, DESIGN_HEIGHT } from '../config';
+import {
+  calculateCardTransform,
+  getSwipeDirection,
+} from '../game/logic/mainScreen';
 
 /**
  * The main scene of the game, where the core gameplay happens.
@@ -13,9 +15,7 @@ export class MainScene extends PIXI.Container {
   private dragging = false;
   private dragStart = new PIXI.Point();
   private originalPosition = new PIXI.Point();
-
-  // Pointer handling uses the PIXI federated event global coords.
-  // animation state for smooth return / bounce
+  private currentTilt = 0;
 
   constructor() {
     super();
@@ -26,14 +26,28 @@ export class MainScene extends PIXI.Container {
    * Initializes the scene, loading assets and setting up the UI.
    */
   private async initialize(): Promise<void> {
-    // Load the texture via PIXI Assets to ensure it is cached before use
-    const texture = await PIXI.Assets.load<PIXI.Texture>(cardImageUrl);
-    this.card = new PIXI.Sprite(texture);
+    try {
+      // Load the texture via PIXI Assets to ensure it is cached before use
+      const texture = await PIXI.Assets.load<PIXI.Texture>(cardImageUrl);
+      this.card = new PIXI.Sprite(texture);
+    } catch (error) {
+      console.error('Failed to load card asset:', error);
+      // Optionally, display a placeholder or error message on the screen
+      const errorText = new PIXI.Text({
+        text: 'Error: Could not load card.',
+        style: { fill: 'white', fontSize: 40 },
+      });
+      errorText.anchor.set(0.5);
+      errorText.x = DESIGN_WIDTH / 2;
+      errorText.y = DESIGN_HEIGHT / 2;
+      this.addChild(errorText);
+      return;
+    }
 
     // Pivot slightly above the bottom so tilt feels natural around a lower point
     this.card.anchor.set(0.5, 0.9);
-    this.card.x = designWidth / 2;
-    this.card.y = designHeight / 2 + 500;
+    this.card.x = DESIGN_WIDTH / 2;
+    this.card.y = DESIGN_HEIGHT / 2 + 500;
 
     this.originalPosition.set(this.card.x, this.card.y);
 
@@ -64,66 +78,23 @@ export class MainScene extends PIXI.Container {
     this.originalPosition.set(this.card.x, this.card.y);
   };
 
-  // pending swipe direction while dragging; only fire when released
-  private pendingSwipe: 'left' | 'right' | null = null;
-
   private onDragMove = (event: PIXI.FederatedPointerEvent): void => {
     if (this.dragging && this.card) {
-      const currentPoint = event.global;
-      // Non-linear lateral mapping for better feel (work in PIXI renderer/design coordinates):
-      // - normalize drag delta to [-1,1] using maxOffset
-      // - apply a power curve (power < 1 amplifies small inputs)
-      // - multiply by maxOffset and an extra amplifyFactor to make displacement more obvious
-      const dragDeltaX = currentPoint.x - this.dragStart.x;
-      const maxOffset = designWidth / 2;
-      const n = Math.max(-1, Math.min(1, dragDeltaX / maxOffset));
-      const power = 0.7; // <1 to amplify
-      const amplifyFactor = 1.4; // overall strength
-      const nonlinear = Math.sign(n) * Math.pow(Math.abs(n), power);
-      // Intended (unclamped) center x based on drag mapping
-      const intendedX =
-        this.originalPosition.x + nonlinear * maxOffset * amplifyFactor;
+      const transform = calculateCardTransform({
+        dragStartX: this.dragStart.x,
+        dragStartY: this.dragStart.y,
+        originalX: this.originalPosition.x,
+        originalY: this.originalPosition.y,
+        currentX: event.global.x,
+        currentY: event.global.y,
+        designWidth: DESIGN_WIDTH,
+        designHeight: DESIGN_HEIGHT,
+      });
 
-      // Render clamp: allow the card center to go to the screen edges
-      const minX = 0;
-      const maxX = designWidth;
-      this.card.x = Math.max(minX, Math.min(intendedX, maxX));
-
-      // Rotate the card based on intended horizontal displacement (not clamped)
-      const offsetXIntended = intendedX - this.originalPosition.x;
-      const maxAngleDeg = 20; // max tilt in degrees
-      const maxAngle = (maxAngleDeg * Math.PI) / 180;
-      const t = Math.max(-1, Math.min(1, offsetXIntended / maxOffset));
-      this.card.rotation = t * maxAngle;
-
-      // Determine pending swipe based on normalized t (rotation influence), not raw x.
-      // This allows users to reach a strong tilt without necessarily crossing the x threshold.
-      const swipeThreshold = 0.6; // require ~60% tilt to consider a swipe candidate
-      if (t <= -swipeThreshold) {
-        // candidate left swipe
-        if (this.pendingSwipe !== 'left') this.pendingSwipe = 'left';
-      } else if (t >= swipeThreshold) {
-        // candidate right swipe
-        if (this.pendingSwipe !== 'right') this.pendingSwipe = 'right';
-      } else {
-        // moved back toward center; cancel pending swipe
-        this.pendingSwipe = null;
-      }
-      // update debug overlay
-      // Add a subtle vertical follow to make the card feel like it's tethered while dragging
-      const dragDeltaY = currentPoint.y - this.dragStart.y;
-      const maxYOffset = Math.min(120, designHeight * 0.06); // cap sway to ~6% of screen
-      const nY = Math.max(-1, Math.min(1, dragDeltaY / (designHeight / 2)));
-      const powerY = 0.7; // gentle non-linearity
-      const amplifyY = 1.0; // keep modest
-      const nonlinearY = Math.sign(nY) * Math.pow(Math.abs(nY), powerY);
-      const intendedY =
-        this.originalPosition.y + nonlinearY * maxYOffset * amplifyY;
-      const minY = 0;
-      const maxY = designHeight;
-      this.card.y = Math.max(minY, Math.min(intendedY, maxY));
-
-      // debug logging removed
+      this.card.x = transform.x;
+      this.card.y = transform.y;
+      this.card.rotation = transform.rotation;
+      this.currentTilt = transform.tilt;
     }
   };
 
@@ -131,43 +102,34 @@ export class MainScene extends PIXI.Container {
     if (!this.dragging || !this.card) {
       return;
     }
-
     this.dragging = false;
 
-    const dragThresholdLeft = designWidth * 0.25;
-    const dragThresholdRight = designWidth * 0.75;
+    const direction = getSwipeDirection(
+      this.card.x,
+      this.currentTilt,
+      DESIGN_WIDTH
+    );
 
-    // Prioritize pendingSwipe (based on tilt). Only trigger if pendingSwipe exists when released.
-    if (this.pendingSwipe === 'left') {
-      this.flyOut('left');
-      this.pendingSwipe = null;
-    } else if (this.pendingSwipe === 'right') {
-      this.flyOut('right');
-      this.pendingSwipe = null;
-    } else if (this.card.x < dragThresholdLeft) {
-      // Fallback: if user physically moved past the x threshold, trigger fly-out
-      this.flyOut('left');
-    } else if (this.card.x > dragThresholdRight) {
-      this.flyOut('right');
+    if (direction) {
+      this.flyOut(direction);
     } else {
-      // Not far enough: cancel and return center without logging
       this.resetCardPosition();
     }
   };
 
   private flyOut(direction: 'left' | 'right'): void {
     if (!this.card) return;
-    // Ensure no other tweens are running
+
+    // Disable input during the animation to prevent conflicts.
+    this.card.eventMode = 'none';
     gsap.killTweensOf(this.card);
 
     const offX =
       direction === 'left'
         ? -(this.card.width + 600)
-        : designWidth + (this.card.width + 600);
+        : DESIGN_WIDTH + (this.card.width + 600);
     const offY = this.card.y + (direction === 'left' ? 120 : -120);
     const rot = direction === 'left' ? -Math.PI / 2 : Math.PI / 2;
-
-    // fly-out started
 
     gsap.to(this.card, {
       x: offX,
@@ -176,27 +138,40 @@ export class MainScene extends PIXI.Container {
       duration: 0.6,
       ease: 'power2.in',
       onComplete: () => {
-        // After flying out, reset the card back to original position and neutral rotation
-        if (!this.card) return;
-        this.card.x = this.originalPosition.x;
-        this.card.y = this.originalPosition.y;
-        this.card.rotation = 0;
+        // After flying out, animate the card back to the center.
+        this.resetCardPosition(true); // `isNewCard` = true
       },
     });
   }
 
-  private resetCardPosition(): void {
+  private resetCardPosition(isNewCard = false): void {
     if (!this.card) return;
-    // Use gsap to smoothly return position and rotation with an overshoot.
+
     gsap.killTweensOf(this.card);
+
+    // If it's a "new" card appearing after a swipe,
+    // it should start transparent and off-screen, then animate in.
+    if (isNewCard) {
+      this.card.alpha = 0;
+      this.card.x = this.originalPosition.x;
+      this.card.y = this.originalPosition.y + DESIGN_HEIGHT; // Start from bottom
+      this.card.rotation = 0;
+    }
+
     gsap.to(this.card, {
       x: this.originalPosition.x,
       y: this.originalPosition.y,
       rotation: 0,
+      alpha: 1,
       duration: 0.5,
-      ease: 'back.out(1.7)',
+      ease: isNewCard ? 'power2.out' : 'back.out(1.7)',
+      onComplete: () => {
+        // Re-enable input once the animation is complete.
+        if (this.card) {
+          this.card.eventMode = 'static';
+        }
+      },
     });
-    // canceled
   }
 
   /**
