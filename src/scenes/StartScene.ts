@@ -41,7 +41,7 @@ export class StartScene extends PIXI.Container {
     const newGameButton = this.createButton('New Game', designHeight / 2);
     newGameButton.on('pointerover', () => this.logic.setHoveredButton('new'));
     newGameButton.on('pointerout', () => this.logic.setHoveredButton(null));
-    newGameButton.on('pointertap', () => console.log('New Game clicked'));
+    newGameButton.on('pointertap', () => this.emit('startgame'));
     this.addChild(newGameButton);
 
     // Create "Continue Game" button
@@ -63,35 +63,36 @@ export class StartScene extends PIXI.Container {
    * @param y - The y position of the button.
    * @returns The created button graphics object.
    */
-  private createButton(text: string, y: number): PIXI.Graphics {
+  private createButton(text: string, y: number): PIXI.Container {
     const buttonWidth = 400;
     const buttonHeight = 100;
 
-    const button = new PIXI.Graphics();
-    button.rect(0, 0, buttonWidth, buttonHeight);
-    button.fill(0x1099bb);
+    const container = new PIXI.Container();
 
-    const buttonText = new PIXI.Text({
-      text,
-      style: {
-        fontFamily: 'Arial',
-        fontSize: 48,
-        fill: 0xffffff,
-        align: 'center',
-      },
+    const graphics = new PIXI.Graphics();
+    graphics.beginFill(0x1099bb);
+    graphics.drawRect(0, 0, buttonWidth, buttonHeight);
+    graphics.endFill();
+
+    const buttonText = new PIXI.Text(text, {
+      fontFamily: 'Arial',
+      fontSize: 48,
+      fill: 0xffffff,
+      align: 'center',
     });
     buttonText.anchor.set(0.5);
     buttonText.x = buttonWidth / 2;
     buttonText.y = buttonHeight / 2;
 
-    button.addChild(buttonText);
-    button.x = designWidth / 2 - buttonWidth / 2;
-    button.y = y;
+    container.addChild(graphics);
+    container.addChild(buttonText);
+    container.x = designWidth / 2 - buttonWidth / 2;
+    container.y = y;
 
-    button.eventMode = 'static'; // Make the button interactive
-    button.cursor = 'pointer';
+    container.eventMode = 'static'; // Make the button interactive
+    container.cursor = 'pointer';
 
-    return button;
+    return container;
   }
 
   /**

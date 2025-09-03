@@ -63,3 +63,27 @@ The project follows a strict separation between game logic and rendering.
 **Problem:** The unit tests failed with the error `Cannot find package 'jsdom'`.
 
 **Solution:** The `jsdom` package, required for the test environment specified in `vite.config.ts`, was not installed. Installing it as a development dependency (`npm install -D jsdom`) resolved the issue.
+
+### 3.3. Architectural Patterns
+
+#### Screen Scaling and Layout ("Fit" Scaling)
+
+The game is designed for a portrait resolution of 1080x1920. To accommodate various device screens, a "Fit" scaling strategy is used.
+
+- **HTML/CSS:** The main `index.html` body uses CSS Flexbox (`display: flex`, `justify-content: center`, `align-items: center`) to center the game canvas within the viewport. The page background is white, providing a letterbox effect if the viewport's aspect ratio does not match the game's.
+- **Pixi.js:** The `main.ts` script contains a `resize` function that dynamically calculates the best scale factor to fit the 1080x1920 canvas within the window while maintaining its aspect ratio. It then sets the `style.width` and `style.height` of the canvas element accordingly. The Pixi app itself has a black background.
+
+#### Simple Scene Management
+
+A lightweight, event-driven scene manager is implemented in `main.ts`.
+
+- **Structure:** A `currentScene` variable in `main.ts` holds a reference to the currently active scene. All scenes (e.g., `StartScene`, `MainScene`) must have an `update` method.
+- **Transitions:** Scene transitions are triggered by events. For example, `StartScene` emits a `startgame` event when the "New Game" button is clicked. The `main.ts` file listens for this event, removes the `currentScene` from the stage, instantiates the new `MainScene`, adds it to the stage, and updates the `currentScene` reference.
+- **Game Loop:** The main application ticker in `main.ts` calls `currentScene.update(delta)` on every frame, ensuring only the active scene is updated.
+
+#### Asset Handling with Vite
+
+Static assets like images are handled by Vite's asset import system.
+
+- **Import:** An asset is imported into a TypeScript file, which provides a URL to the asset (e.g., `import cardImageUrl from '../../assets/cards/card.png'`).
+- **Loading:** This URL is then passed to `PIXI.Assets.load()` to be loaded by the Pixi loader. This works seamlessly with Vite's development server and build process, ensuring assets are correctly bundled and referenced.
