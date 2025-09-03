@@ -56,6 +56,7 @@ The project uses a singleton `SceneManager` (`src/scenes/SceneManager.ts`) to co
 ### Logic and View Separation
 
 A strict separation between logic and view is enforced, particularly for complex scenes.
+
 - **Example (`MainScene`):** The complex drag/swipe calculations are not performed in `MainScene.ts`. Instead, they are located in pure functions in `src/game/logic/mainScreen.ts`.
 - **Workflow:** The view (`MainScene`) captures user input, passes it to the pure logic functions, and then applies the returned values to the Pixi.js objects.
 - **Testing:** All new gameplay logic should be in a `logic` file and be covered by unit tests.

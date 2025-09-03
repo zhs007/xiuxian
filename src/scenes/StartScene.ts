@@ -40,7 +40,17 @@ export class StartScene extends PIXI.Container {
     const newGameButton = this.createButton('New Game', DESIGN_HEIGHT / 2);
     newGameButton.on('pointerover', () => this.logic.setHoveredButton('new'));
     newGameButton.on('pointerout', () => this.logic.setHoveredButton(null));
-    newGameButton.on('pointertap', () => this.emit('startgame'));
+    newGameButton.on('pointertap', () => {
+      // Emit the event on the parent (the app.stage) so listeners attached to the stage
+      // (e.g. in `main.ts`) receive it. If not yet added to a parent, fall back to
+      // emitting on this scene instance.
+      // Assert a precise type for the emitter that includes `emit` to avoid unsafe any usage.
+      const emitter = (this.parent ?? this) as PIXI.Container & {
+        emit(event: string, ...args: unknown[]): boolean;
+      };
+
+      emitter.emit('startgame');
+    });
     this.addChild(newGameButton);
 
     // Create "Continue Game" button
@@ -72,15 +82,18 @@ export class StartScene extends PIXI.Container {
     container.pivot.set(buttonWidth / 2, buttonHeight / 2);
 
     const graphics = new PIXI.Graphics();
-    graphics.beginFill(0x1099bb);
-    graphics.drawRect(0, 0, buttonWidth, buttonHeight);
-    graphics.endFill();
+    // Use the v8 Graphics API: first create the rect path, then fill it.
+    // Calling `rect` before `fill` ensures the shape exists to be filled.
+    graphics.rect(0, 0, buttonWidth, buttonHeight).fill(0x1099bb);
 
-    const buttonText = new PIXI.Text(text, {
-      fontFamily: 'Arial',
-      fontSize: 48,
-      fill: 0xffffff,
-      align: 'center',
+    const buttonText = new PIXI.Text({
+      text,
+      style: {
+        fontFamily: 'Arial',
+        fontSize: 48,
+        fill: 0xffffff,
+        align: 'center',
+      },
     });
     buttonText.anchor.set(0.5);
     buttonText.x = buttonWidth / 2;

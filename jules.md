@@ -99,6 +99,7 @@ Following a comprehensive code review (`codereview/report001.md`), several key a
 **Problem:** The previous scene management was manual and did not properly destroy old scenes, leading to potential memory leaks from orphaned event listeners and textures.
 
 **Solution:** A singleton `SceneManager` was created (`src/scenes/SceneManager.ts`).
+
 - **Lifecycle Management:** The manager's `switchScene` method now handles removing the old scene, calling `.destroy({ children: true })` on it to free up all associated resources, and adding the new scene to the stage.
 - **Integration:** The main application entry point (`src/main.ts`) was refactored to use this manager, simplifying the scene transition logic and ensuring proper cleanup.
 
@@ -107,6 +108,7 @@ Following a comprehensive code review (`codereview/report001.md`), several key a
 **Problem:** The core gameplay logic (card dragging, non-linear mapping, swipe detection) was tightly coupled with the rendering code inside `MainScene.ts`, making it impossible to unit test.
 
 **Solution:**
+
 - **Pure Functions:** All complex calculations were extracted into pure functions within a new file, `src/game/logic/mainScreen.ts`. These functions operate on a `CardDragState` object and return calculated values, with no side effects or knowledge of Pixi.js.
 - **Unit Tests:** A corresponding test file, `src/game/logic/mainScreen.test.ts`, was created with a comprehensive suite of tests covering the extracted logic. This validates the behavior and protects against future regressions.
 - **Refactoring:** `MainScene` was refactored to be a "dumb" view in this context. It now calls the pure logic functions to get transform values and applies them to the Pixi sprite, greatly reducing its complexity.
@@ -116,6 +118,7 @@ Following a comprehensive code review (`codereview/report001.md`), several key a
 **Problem:** The Fastify server was minimal and lacked production-ready features.
 
 **Solution:** The server (`server/index.ts`) was upgraded to include:
+
 - **CORS:** Added the `@fastify/cors` plugin to handle cross-origin requests.
 - **Graceful Shutdown:** Implemented listeners for `SIGINT` and `SIGTERM` to allow the server to close existing connections gracefully before exiting.
 - **Environment-based Configuration:** The server now uses `process.env` to configure its host and port, with sensible defaults (`0.0.0.0:3000`).
