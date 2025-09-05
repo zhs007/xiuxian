@@ -18,8 +18,12 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "sourceMap": true
+    "sourceMap": true,
+    "composite": true
   },
   "include": ["src", "server", "tests"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [
+    { "path": "./tsconfig.node.json" },
+    { "path": "../../packages/logic-core" }
+  ]
 }

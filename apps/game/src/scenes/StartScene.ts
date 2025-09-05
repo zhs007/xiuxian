@@ -129,9 +129,8 @@ export class StartScene extends PIXI.Container {
 
   /**
    * Updates the scene.
-   * @param delta - The time in milliseconds since the last update.
    */
-  public update(_delta: number): void {
+  public update(): void {
     // This is where you would add your game logic to run on every frame.
     // For now, we don't have any, but we could change button colors on hover here
     // by checking this.logic.hoveredButton.
