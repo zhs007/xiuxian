@@ -1,0 +1,14 @@
+{
+  "name": "@xiuxian/logic-core",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

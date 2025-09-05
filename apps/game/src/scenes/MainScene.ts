@@ -176,9 +176,8 @@ export class MainScene extends PIXI.Container {
 
   /**
    * Updates the scene.
-   * @param _delta - The time in milliseconds since the last update.
    */
-  public update(_delta: number): void {
+  public update(): void {
     // No per-frame animation handling needed; gsap handles tweens.
   }
 }

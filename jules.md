@@ -128,3 +128,25 @@ Following a comprehensive code review (`codereview/report001.md`), several key a
 - **Input During Animation:** Fixed a bug where the user could interact with the card while it was in the middle of its "fly out" animation. This was solved by setting `eventMode = 'none'` at the start of the animation and restoring it upon completion.
 - **Smoother Animations:** The card's re-entry after a swipe was changed from an instant snap to a smooth animation, improving the game's visual flow.
 - **Button Feedback:** Buttons in the `StartScene` now provide visual feedback (scaling) on hover and press, making the UI feel more responsive.
+
+---
+
+### 3.5. Dependency and Tooling Maintenance (plan005)
+
+As part of routine maintenance, a full dependency upgrade was performed to ensure the project uses the latest stable versions of all tools and libraries.
+
+#### Dependency Update
+
+- **Action:** All dependencies across the monorepo were updated using `pnpm update --latest -r`.
+- **Impact:** This brought key packages like `Turborepo`, `Pixi.js`, `GSAP`, and various ESLint plugins to their latest versions, ensuring access to new features and security patches.
+
+#### Turborepo Configuration Tuning
+
+**Problem:** During the verification process, Turborepo issued warnings for the `format:check` and `test:ci` tasks, stating that no output files were found.
+
+**Solution:**
+
+- For `format:check`, the task runs `prettier --check`, which only returns a status code and doesn't produce file outputs. The `outputs` key was removed from its definition in `turbo.json` to silence the warning.
+- For `test:ci`, the task in `turbo.json` was configured to expect a `coverage/**` output, but the script in `apps/game/package.json` did not generate one. The script was updated from `vitest run` to `vitest run --coverage` to align the generated output with Turborepo's expectation.
+
+These small fixes ensure a clean, warning-free CI pipeline.
