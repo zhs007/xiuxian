@@ -35,15 +35,9 @@ importers:
 
   apps/game:
     dependencies:
-      '@fastify/cors':
-        specifier: ^11.1.0
-        version: 11.1.0
       '@xiuxian/logic-core':
         specifier: workspace:*
         version: link:../../packages/logic-core
-      fastify:
-        specifier: ^5.5.0
-        version: 5.5.0
       gsap:
         specifier: ^3.13.0
         version: 3.13.0
@@ -60,15 +54,31 @@ importers:
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
-      tsx:
-        specifier: ^4.20.5
-        version: 4.20.5
       vite:
         specifier: ^7.1.4
         version: 7.1.4(@types/node@24.3.1)(tsx@4.20.5)
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@24.3.1)(jsdom@26.1.0)(tsx@4.20.5)
+
+  apps/server:
+    dependencies:
+      '@fastify/cors':
+        specifier: ^11.1.0
+        version: 11.1.0
+      fastify:
+        specifier: ^5.5.0
+        version: 5.5.0
+    devDependencies:
+      '@types/node':
+        specifier: ^24.3.1
+        version: 24.3.1
+      tsx:
+        specifier: ^4.20.5
+        version: 4.20.5
+      typescript:
+        specifier: ^5.5.4
+        version: 5.9.2
 
   packages/logic-core:
     devDependencies:
