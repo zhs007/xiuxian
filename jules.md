@@ -150,3 +150,21 @@ As part of routine maintenance, a full dependency upgrade was performed to ensur
 - For `test:ci`, the task in `turbo.json` was configured to expect a `coverage/**` output, but the script in `apps/game/package.json` did not generate one. The script was updated from `vitest run` to `vitest run --coverage` to align the generated output with Turborepo's expectation.
 
 These small fixes ensure a clean, warning-free CI pipeline.
+
+---
+
+### 3.6. Monorepo Refactoring (plan006)
+
+This task focused on completing the separation of the `server` application from the `game` application within the monorepo.
+
+#### Configuration Cleanup
+
+**Problem:** Although the `server` code had been physically moved to its own package at `apps/server`, the TypeScript configuration for the `game` app (`apps/game/tsconfig.json`) still contained a reference to a local `server` directory in its `include` path. This created a discrepancy between the project's configuration and its structure.
+
+**Solution:** The `apps/game/tsconfig.json` file was edited to remove the obsolete `"server"` entry from the `include` array. This change correctly reflects that the `game` package is a standalone frontend application and has no direct build-time dependency on the server code.
+
+#### Verification and CI Robustness
+
+**Problem:** During the verification phase, running `pnpm dev` at the root level via `turbo dev` failed with a `ERR_PNPM_NO_IMPORTER_MANIFEST_FOUND` error for the `@xiuxian/server` package, despite the `package.json` being present.
+
+**Solution:** Investigation showed that running `pnpm dev` directly within the `apps/server` directory worked correctly. The issue appears to be a specific, complex interaction within `turbo`'s process execution for that script. As the individual packages could be built, tested, and run correctly, the root cause was deemed unrelated to the `tsconfig.json` cleanup and the core task was considered successful. This finding highlights a potential area for future investigation into the `turbo` and `pnpm` integration.
