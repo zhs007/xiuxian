@@ -37,6 +37,21 @@ The project follows a strict separation between game logic and rendering.
   - `types`: Shared TypeScript type definitions.
 - `.github/workflows`: CI/CD configuration.
 
+### 2.3. Packages
+
+The monorepo contains several packages in the `packages/` directory, designed to be shared across different applications (e.g., the game client and the server).
+
+#### `logic-core`
+
+This package contains the fundamental, environment-agnostic game logic.
+
+- **Purpose:** To define the core data structures and mechanics of the card game.
+- **Key Components:**
+  - `Card`: A class representing a single card, with properties like `id`, `name`, `type`, and `description`.
+  - `CardManager`: A class responsible for loading card definitions from JSON files. Its `load()` method is asynchronous and designed to work in a Node.js environment (e.g., on the server or in a build script).
+  - `types`: Contains shared enums and interfaces, like `CardType` and `CardData`.
+- **ESM Configuration:** This package is configured as a native ES Module (`"type": "module"`). This required careful configuration of `tsconfig.json` (`"module": "NodeNext"`, `"moduleResolution": "NodeNext"`) and the use of explicit `.js` file extensions in all internal imports to ensure compatibility with Node.js's module resolution rules.
+
 ## 3. Development Process
 
 ### 3.1. Tooling and Scripts
