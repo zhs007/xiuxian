@@ -1,0 +1,10 @@
+{
+  "id": "character1",
+  "type": 0,
+  "name": "Hero",
+  "description": "A brave hero.",
+  "data": {
+    "attack": 10,
+    "health": 100
+  }
+}

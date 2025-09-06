@@ -1,0 +1,9 @@
+{
+  "id": "action1",
+  "type": 1,
+  "name": "Slash",
+  "description": "A powerful sword attack.",
+  "data": {
+    "damage": 20
+  }
+}
