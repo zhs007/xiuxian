@@ -49,7 +49,9 @@ This package contains the fundamental, environment-agnostic game logic.
 - **Key Components:**
   - `Card`: A class representing a single card, with properties like `id`, `name`, `type`, and `description`.
   - `CardManager`: A class responsible for loading card definitions from JSON files. Its `load()` method is asynchronous and designed to work in a Node.js environment (e.g., on the server or in a build script).
-  - `types`: Contains shared enums and interfaces, like `CardType` and `CardData`.
+  - `Character`: Represents a specific instance of a character in the game. It is initialized from a `Card` but has its own unique state, including a unique ID and a flexible attribute system (`Map<string, number>`).
+  - `CharacterManager`: Manages all active `Character` instances in the game, providing methods to create, retrieve, and list characters.
+  - `types`: Contains shared enums and interfaces, like `CardType`, `CardData`, and `CharacterType`.
 - **ESM Configuration:** This package is configured as a native ES Module (`"type": "module"`). This required careful configuration of `tsconfig.json` (`"module": "NodeNext"`, `"moduleResolution": "NodeNext"`) and the use of explicit `.js` file extensions in all internal imports to ensure compatibility with Node.js's module resolution rules.
 
 ## 3. Development Process

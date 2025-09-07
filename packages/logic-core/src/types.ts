@@ -12,3 +12,8 @@ export interface CardData {
   description: string;
   data?: unknown;
 }
+
+export enum CharacterType {
+  PLAYER,
+  NPC,
+}
