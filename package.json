@@ -5,6 +5,7 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "dev:game": "pnpm --filter @xiuxian/game dev",
     "lint": "turbo lint",
     "format": "turbo format",
     "format:check": "turbo format:check",
