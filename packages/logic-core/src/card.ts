@@ -1,19 +1,37 @@
-import { CardType, CardData } from './types.js';
+import { CardData, CardRarity, CardType } from './types.js';
 
 export class Card {
-  id: string;
-  type: CardType;
-  name: string;
-  description: string;
-  image: string;
-  data: unknown;
+  public readonly cardData: CardData;
 
-  constructor(data: CardData) {
-    this.id = data.id;
-    this.type = data.type;
-    this.name = data.name;
-    this.description = data.description;
-    this.image = `${data.id}.png`;
-    this.data = data.data;
+  constructor(cardData: CardData) {
+    this.cardData = cardData;
+  }
+
+  get id(): string {
+    return this.cardData.id;
+  }
+
+  get type(): CardType {
+    return this.cardData.type;
+  }
+
+  get name(): string {
+    return this.cardData.name;
+  }
+
+  get description(): string {
+    return this.cardData.description;
+  }
+
+  get rarity(): CardRarity {
+    return this.cardData.rarity;
+  }
+
+  get image(): string {
+    return `${this.cardData.id}.png`;
+  }
+
+  get data(): unknown {
+    return this.cardData.data;
   }
 }

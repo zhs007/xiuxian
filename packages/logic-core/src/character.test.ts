@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { Character } from './character.js';
 import { Card } from './card.js';
-import { CardType, CharacterType } from './types.js';
+import { CardRarity, CardType, CharacterType } from './types.js';
 
 describe('Character', () => {
   let card: Card;
@@ -12,6 +12,7 @@ describe('Character', () => {
       type: CardType.CHARACTER,
       name: 'Test Character',
       description: 'A character for testing.',
+      rarity: CardRarity.COMMON,
       data: {},
     });
   });
@@ -70,6 +71,7 @@ describe('Character', () => {
       type: CardType.CHARACTER,
       name: 'Character With Data',
       description: 'A character with initial attributes.',
+      rarity: CardRarity.COMMON,
       data: {
         hp: 100,
         mp: 50,

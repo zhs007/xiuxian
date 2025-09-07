@@ -1,3 +1,10 @@
+export enum CardRarity {
+  COMMON, // 白色：普通
+  RARE, // 蓝色：稀有
+  EPIC, // 紫色：史诗
+  LEGENDARY, // 橙色：传说
+}
+
 export enum CardType {
   CHARACTER,
   ACTION,
@@ -15,8 +22,9 @@ export type CardData =
   | {
       id: string;
       type: CardType.CHARACTER;
-      name: string;
+      name:string;
       description: string;
+      rarity: CardRarity;
       data: CharacterCardData;
     }
   | {
@@ -24,6 +32,7 @@ export type CardData =
       type: CardType.ACTION;
       name: string;
       description: string;
+      rarity: CardRarity;
       data?: unknown;
     }
   | {
@@ -31,6 +40,7 @@ export type CardData =
       type: CardType.EVENT;
       name: string;
       description: string;
+      rarity: CardRarity;
       data?: unknown;
     }
   | {
@@ -38,6 +48,7 @@ export type CardData =
       type: CardType.ITEM;
       name: string;
       description: string;
+      rarity: CardRarity;
       data?: unknown;
     };
 
