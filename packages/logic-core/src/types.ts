@@ -1,8 +1,8 @@
 export enum CardRarity {
-  COMMON, // 白色：普通
-  RARE, // 蓝色：稀有
-  EPIC, // 紫色：史诗
-  LEGENDARY, // 橙色：传说
+  COMMON, // White: Common
+  RARE, // Blue: Rare
+  EPIC, // Purple: Epic
+  LEGENDARY, // Orange: Legendary
 }
 
 export enum CardType {
