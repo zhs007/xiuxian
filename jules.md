@@ -209,3 +209,24 @@ The character creation process was updated to use this new data:
 - **`Character` Constructor:** The constructor now accepts the `name` as a parameter. It checks if the provided card is a `CHARACTER` card and, if so, iterates over the `data` property (the `CharacterCardData`) to populate the character's `attributes` map.
 
 This change makes the character creation process more robust and flexible, allowing for easy initialization of characters with a rich set of starting attributes. The changes were fully tested, with new unit tests added to verify the attribute initialization logic.
+
+---
+
+### 3.8. Card Refactoring and Rarity (plan012)
+
+This task introduced a new `rarity` system for cards and refactored the `Card` class to be more efficient and maintainable.
+
+#### Card Rarity System
+
+A new `CardRarity` enum was added to `packages/logic-core/src/types.ts`, defining four levels of rarity: `COMMON`, `RARE`, `EPIC`, and `LEGENDARY`. This enum was then integrated into the `CardData` type, making `rarity` a required attribute for all card definitions. This provides a foundation for future game mechanics based on card rarity.
+
+#### `Card` Class Refactoring
+
+**Problem:** The `Card` class was storing its own copy of all properties from its source `CardData` object (e.g., `id`, `name`, `description`). This was inefficient and meant that any future additions to `CardData` would require redundant changes in the `Card` class.
+
+**Solution:** The `Card` class was refactored to act as a lightweight wrapper around a `CardData` object.
+
+- The class now stores a single `public readonly cardData: CardData` property.
+- All other properties (`id`, `name`, `type`, `rarity`, etc.) were converted into getters that directly return the corresponding value from the `cardData` object.
+
+This change significantly improves maintainability. The `Card` class no longer duplicates data and will automatically expose any new properties added to `CardData` via new getters, without requiring further modification to its core structure. This also ensures that all `Card` instances derived from the same `CardData` are consistent. The change was implemented across the `logic-core` package, and all related unit tests were updated to reflect the new data structures, ensuring the system remains robust.

@@ -62,6 +62,13 @@ A strict separation between logic and view is enforced, particularly for complex
 - **Workflow:** The view (`MainScene`) captures user input, passes it to the pure logic functions, and then applies the returned values to the Pixi.js objects.
 - **Testing:** All new gameplay logic should be in a `logic` file and be covered by unit tests.
 
+### Card Data Structure
+
+The core `logic-core` package defines how cards work.
+
+- **`CardData` (`packages/logic-core/src/types.ts`):** This is the raw data definition for a card, loaded from JSON. It includes properties like `id`, `name`, `type`, and the new `rarity`. It is a discriminated union, making it type-safe.
+- **`Card` (`packages/logic-core/src/card.ts`):** This is a lightweight class that represents a card instance. It **does not** duplicate data. Instead, it holds a reference to a `CardData` object and uses getters to expose the data. When you are working with a card in the game, you will be using a `Card` object.
+
 ## Agent Instructions Verification
 
 After making changes, please verify them by running the following commands from the project root:
