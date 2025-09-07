@@ -185,3 +185,27 @@ This task focused on completing the separation of the `server` application from 
 **Problem:** During the verification phase, running `pnpm dev` at the root level via `turbo dev` failed with a `ERR_PNPM_NO_IMPORTER_MANIFEST_FOUND` error for the `@xiuxian/server` package, despite the `package.json` being present.
 
 **Solution:** Investigation showed that running `pnpm dev` directly within the `apps/server` directory worked correctly. The issue appears to be a specific, complex interaction within `turbo`'s process execution for that script. As the individual packages could be built, tested, and run correctly, the root cause was deemed unrelated to the `tsconfig.json` cleanup and the core task was considered successful. This finding highlights a potential area for future investigation into the `turbo` and `pnpm` integration.
+
+---
+
+### 3.7. Character Card Implementation (plan011)
+
+This task introduced the concept of "Character Cards" to initialize characters with a predefined set of attributes.
+
+#### Type-Safe Card Data with Discriminated Unions
+
+**Problem:** The original `CardData` type used `data: unknown`, which was not type-safe and required type assertions or guards wherever card-specific data was accessed.
+
+**Solution:** The `CardData` type in `packages/logic-core/src/types.ts` was refactored into a discriminated union. This major improvement ensures that the `data` property's type is correctly inferred based on the `type` property of the card.
+
+- A new `CharacterCardData` type (`Record<string, number>`) was created to define the shape of attribute data.
+- The `CardData` type is now a union of specific card types (e.g., character, action, event). If a card's `type` is `CardType.CHARACTER`, TypeScript now knows its `data` property is of type `CharacterCardData`.
+
+#### Character Creation Workflow
+
+The character creation process was updated to use this new data:
+
+- **`CharacterManager.createCharacter`:** The method signature was changed from `(card, type)` to `(card, name, type)`. This decouples the character's name from the card's name.
+- **`Character` Constructor:** The constructor now accepts the `name` as a parameter. It checks if the provided card is a `CHARACTER` card and, if so, iterates over the `data` property (the `CharacterCardData`) to populate the character's `attributes` map.
+
+This change makes the character creation process more robust and flexible, allowing for easy initialization of characters with a rich set of starting attributes. The changes were fully tested, with new unit tests added to verify the attribute initialization logic.
