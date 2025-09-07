@@ -46,4 +46,24 @@ describe('CharacterManager', () => {
     const allCharacters = characterManager.getAllCharacters();
     expect(allCharacters.length).toBe(0);
   });
+
+  it('should get the player character', () => {
+    const player = characterManager.createCharacter(card, CharacterType.PLAYER);
+    characterManager.createCharacter(card, CharacterType.NPC);
+    const retrievedPlayer = characterManager.getPlayer();
+    expect(retrievedPlayer).toBe(player);
+  });
+
+  it('should return undefined if no player character exists', () => {
+    characterManager.createCharacter(card, CharacterType.NPC);
+    const retrievedPlayer = characterManager.getPlayer();
+    expect(retrievedPlayer).toBeUndefined();
+  });
+
+  it('should throw an error if creating a second player character', () => {
+    characterManager.createCharacter(card, CharacterType.PLAYER);
+    expect(() => {
+      characterManager.createCharacter(card, CharacterType.PLAYER);
+    }).toThrow('A player character already exists. Only one player is allowed.');
+  });
 });
