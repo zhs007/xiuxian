@@ -230,3 +230,41 @@ A new `CardRarity` enum was added to `packages/logic-core/src/types.ts`, definin
 - All other properties (`id`, `name`, `type`, `rarity`, etc.) were converted into getters that directly return the corresponding value from the `cardData` object.
 
 This change significantly improves maintainability. The `Card` class no longer duplicates data and will automatically expose any new properties added to `CardData` via new getters, without requiring further modification to its core structure. This also ensures that all `Card` instances derived from the same `CardData` are consistent. The change was implemented across the `logic-core` package, and all related unit tests were updated to reflect the new data structures, ensuring the system remains robust.
+
+---
+
+### 3.9. Character Attribute System (plan013)
+
+This task established a comprehensive and extensible attribute system for characters, forming the foundation for detailed character progression and game mechanics.
+
+#### Core Design
+
+- **Extensible Attributes:** The system uses a `Map<string, number>` on the `Character` class to store attributes. This avoids rigid class structures and allows for new attributes to be added easily.
+- **Constant-driven Keys:** To prevent magic strings and ensure consistency, all attribute keys are defined as exported constants in `packages/logic-core/src/constants.ts` (e.g., `ATTR_AGE`, `ATTR_CULTIVATION_STAGE`).
+- **External Documentation:** A new `docs/attributes.md` file was created to serve as the single source of truth for all available character attributes, their string keys, and their gameplay purpose.
+
+#### New Attribute Implementation
+
+Several core attributes for the cultivation theme were introduced:
+
+- **`age`**: Character's age.
+- **`spirit_stones`**: Primary currency.
+- **`cultivation_stage`**: A single number encoding the major and minor cultivation level (e.g., `1001` for 炼气 1 阶).
+- **`cultivation_xp` & `cultivation_xp_max`**: Current and maximum experience points for the current stage.
+
+#### Data-Driven Configuration
+
+To keep game balance data separate from code logic, a new configuration file was created:
+
+- **`packages/logic-core/src/config/cultivation.ts`**: This file exports a configuration object (`CULTIVATION_XP_CONFIG`) that maps each specific cultivation stage to the maximum XP required. This allows for easy tuning of progression difficulty without altering game code.
+
+#### Helper Utilities
+
+To translate raw attribute data into human-readable strings for the UI, two new utility functions were created, fully unit-tested, and exported from the `logic-core` package:
+
+- **`getReadableSpiritualRoot(rootValue)`**: Takes the spiritual root bitmask and returns a descriptive string like "天灵根（土）" or "异灵根（雷）". It handles single, multiple, and special variant roots.
+- **`getReadableCultivationStage(stage, maxXP, currentXP)`**: Takes the cultivation numbers and returns a formatted string like "炼气初期 1 阶" or "筑基后期 9 阶 瓶颈", correctly identifying the major stage, sub-tier (初期, 中期, 后期), and bottleneck status.
+
+#### CI and Tooling Fixes
+
+During verification, it was discovered that the `test:ci` and `format:check` scripts were not being run for the `logic-core` package. The `package.json` for `logic-core` was updated to include these scripts, and a missing dev dependency (`@vitest/coverage-v8`) was added, ensuring that all packages are now consistently linted, formatted, and tested in the CI pipeline.

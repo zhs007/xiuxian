@@ -22,7 +22,7 @@ export type CardData =
   | {
       id: string;
       type: CardType.CHARACTER;
-      name:string;
+      name: string;
       description: string;
       rarity: CardRarity;
       data: CharacterCardData;

@@ -1,6 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
-import { Card } from './card.js';
-import { CardType, CharacterType } from './types.js';
+import { v4 as uuidv4 } from "uuid";
+import { Card } from "./card.js";
+import { CardType, CharacterType } from "./types.js";
 
 export class Character {
   id: string;
