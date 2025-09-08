@@ -1,4 +1,4 @@
-import { CardData, CardRarity, CardType } from './types.js';
+import { CardData, CardRarity, CardType } from "./types.js";
 
 export class Card {
   public readonly cardData: CardData;

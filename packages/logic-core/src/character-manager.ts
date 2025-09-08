@@ -1,6 +1,6 @@
-import { Card } from './card.js';
-import { Character } from './character.js';
-import { CharacterType } from './types.js';
+import { Card } from "./card.js";
+import { Character } from "./character.js";
+import { CharacterType } from "./types.js";
 
 export class CharacterManager {
   private characters: Map<string, Character> = new Map();
@@ -9,7 +9,9 @@ export class CharacterManager {
   createCharacter(card: Card, name: string, type: CharacterType): Character {
     if (type === CharacterType.PLAYER) {
       if (this.playerCharacterId !== null) {
-        throw new Error('A player character already exists. Only one player is allowed.');
+        throw new Error(
+          "A player character already exists. Only one player is allowed.",
+        );
       }
     }
 

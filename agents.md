@@ -69,6 +69,14 @@ The core `logic-core` package defines how cards work.
 - **`CardData` (`packages/logic-core/src/types.ts`):** This is the raw data definition for a card, loaded from JSON. It includes properties like `id`, `name`, `type`, and the new `rarity`. It is a discriminated union, making it type-safe.
 - **`Card` (`packages/logic-core/src/card.ts`):** This is a lightweight class that represents a card instance. It **does not** duplicate data. Instead, it holds a reference to a `CardData` object and uses getters to expose the data. When you are working with a card in the game, you will be using a `Card` object.
 
+### Character Attribute System
+
+The game uses a flexible string-based attribute system for characters, managed in the `Character` class.
+
+- **Keys:** To ensure consistency, always use the predefined constants for attribute keys. These are located in `packages/logic-core/src/constants.ts` (e.g., `ATTR_AGE`, `ATTR_CULTIVATION_STAGE`). Do not use raw strings.
+- **Documentation:** For a complete list of available attributes and their purpose, refer to the `docs/attributes.md` file.
+- **Configuration:** Game-balancing data, such as XP requirements for cultivation, is stored in `packages/logic-core/src/config/`.
+
 ## Agent Instructions Verification
 
 After making changes, please verify them by running the following commands from the project root:
